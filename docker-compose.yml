@@ -2,27 +2,29 @@ version: "3.8"
 
 services:
     web:
-        build: .
+        build:
+            context: .
+            dockerfile: Dockerfile
         command: python app.py run -h 0.0.0.0
         volumes:
-            - ./:/usr/src/app/
+            - ./:/usr/src/
         ports:
             - 5000:5000
         env_file:
             - ./.env.list
+        depends_on:
+            - db
     db:
         image: postgres:13.2
         restart: always
         environment:
-            POSTGRES_USER: ${POSTGRES_USER}
-            POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-            PGDATA: /var/lib/postgresql/data
+            - POSTGRES_USER=postgres
+            - POSTGRES_PASSWORD=postgres_password
+            - PGDATA=/var/lib/postgresql/data
         volumes:
             - db-data:/var/lib/postgresql/data
         ports:
             - 5432:5432
-        env_file:
-            - ./.env.list
 
 volumes:
    db-data:
