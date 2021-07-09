@@ -1,3 +1,6 @@
+"""
+Models of project
+"""
 from app import db
 
 
@@ -5,7 +8,7 @@ class User(db.Model):
     __tablename__ = "user"
 
     user_id = db.Column(db.Integer, primary_key=True)
-    login = db.Column(db.String(50), unique=True, nullable=False)
+    username = db.Column(db.String(50), unique=True, nullable=False)
     first_name = db.Column(db.String(50), unique=False, nullable=False)
     last_name = db.Column(db.String(50), unique=False, nullable=False)
     email = db.Column(db.String(50), unique=True, nullable=False)
@@ -63,4 +66,3 @@ class Genre(db.Model):
     genre_id = db.Column(db.Integer, primary_key=True)
     genre_title = db.Column(db.String(20), unique=True, nullable=False)
     film_has_genres = db.relationship('FilmHasGenre', backref='genre', lazy=True)
-

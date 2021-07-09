@@ -10,13 +10,14 @@ RUN apt-get update && apt-get install -y netcat
 RUN pip3 install poetry
 RUN poetry config virtualenvs.create false
 RUN poetry install --no-dev
-RUN pip3 install flask
+
 
 
 COPY app.py .
 COPY /app /app
 COPY entrypoint.sh .
 
+RUN pip3 install flask
 RUN pip3 install psycopg2-binary
-
+RUN pip3 install flask_migrate
 ENTRYPOINT [ "bash", "entrypoint.sh" ]
