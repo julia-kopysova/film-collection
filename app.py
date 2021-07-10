@@ -1,12 +1,22 @@
-from flask import Flask
+"""
+Module for managing project
+"""
+from flask.cli import FlaskGroup
 
-app = Flask(__name__)
+from app import app, db
+cli = FlaskGroup(app)
 
 
-@app.route('/')
-def hello_world():
-    return 'Hello World!'
+@cli.command("create_db")
+def create_db():
+    """
+    Method for creating database
+    :return:
+    """
+    db.drop_all()
+    db.create_all()
+    db.session.commit()
 
 
-if __name__ == '__main__':
-    app.run()
+if __name__ == "__main__":
+    cli()
