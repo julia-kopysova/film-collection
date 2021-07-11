@@ -8,7 +8,7 @@
 #         load_instance = True
 #         include_fk = True
 from app import ma
-from app.models import Genre
+from app.models import Genre, Director
 
 
 class GenreSchema(ma.Schema):
@@ -26,6 +26,9 @@ genre_schema = GenreSchema(many=True)
 class DirectorSchema(ma.Schema):
     class Meta:
         fields = ("first_name", "last_name")
+        model = Director
+        load_instance = True
+        include_fk = True
 
 
 director_schema = DirectorSchema()

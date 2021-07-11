@@ -29,6 +29,21 @@ class GenreResource(Resource):
         genre = Genre.query.get_or_404(genre_id)
         return genre_schema.dump(genre)
 
+    def patch(self, genre_id):
+        genre = Genre.query.get_or_404(genre_id)
+
+        if 'genre_title' in request.json:
+            genre.genre_title = request.json['genre_title']
+
+        db.session.commit()
+        return genre_schema.dump(genre)
+
+    def delete(self, genre_id):
+        genre = Genre.query.get_or_404(genre_id)
+        db.session.delete(genre)
+        db.session.commit()
+        return '', 204
+
 # from flask import jsonify, request
 #
 # from app import app, db
