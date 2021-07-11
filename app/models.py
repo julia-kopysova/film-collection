@@ -1,6 +1,8 @@
 """
 Models of project
 """
+from sqlalchemy.orm import relationship, backref
+
 from app import db
 
 
@@ -49,7 +51,7 @@ class Film(db.Model):
     poster = db.Column(db.String(100), unique=False, nullable=False)
     director_id = db.Column(db.Integer, db.ForeignKey('director.director_id'), nullable=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.user_id'), nullable=False)
-    film_has_genres = db.relationship('FilmHasGenre', backref='film', lazy=True)
+    genres = relationship("Genre", secondary="film_has_genre")
 
     def __init__(self, film_title, release_date, description, rating, poster, director_id, user_id):
         self.film_title = film_title
@@ -61,16 +63,7 @@ class Film(db.Model):
         self.user_id = user_id
 
 
-class FilmHasGenre(db.Model):
-    __tablename__ = "film_has_genre"
 
-    film_has_genre = db.Column(db.Integer, primary_key=True)
-    film_id = db.Column(db.Integer, db.ForeignKey('film.film_id'), nullable=False)
-    genre_id = db.Column(db.Integer, db.ForeignKey('genre.genre_id'), nullable=False)
-
-    def __init__(self, film_id, genre_id):
-        self.film_id = film_id
-        self.genre_id = genre_id
 
 
 class Genre(db.Model):
@@ -78,9 +71,22 @@ class Genre(db.Model):
 
     genre_id = db.Column(db.Integer, primary_key=True)
     genre_title = db.Column(db.String(20), unique=True, nullable=False)
-    # film_has_genres = db.relationship('FilmHasGenre', backref='genre', lazy=True)
+    users = relationship("Film", secondary="film_has_genre")
 
     def __init__(self, genre_title):
         self.genre_title = genre_title
 
 
+class FilmHasGenre(db.Model):
+    __tablename__ = "film_has_genre"
+
+    film_has_genre = db.Column(db.Integer, primary_key=True)
+    film_id = db.Column(db.Integer, db.ForeignKey('film.film_id'), nullable=False)
+    genre_id = db.Column(db.Integer, db.ForeignKey('genre.genre_id'), nullable=False)
+
+    film = relationship(Film, backref=backref("film_has_genre", cascade="all, delete-orphan"))
+    genre = relationship(Genre, backref=backref("film_has_genre", cascade="all, delete-orphan"))
+
+    def __init__(self, film_id, genre_id):
+        self.film_id = film_id
+        self.genre_id = genre_id
