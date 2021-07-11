@@ -51,6 +51,15 @@ class Film(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.user_id'), nullable=False)
     film_has_genres = db.relationship('FilmHasGenre', backref='film', lazy=True)
 
+    def __init__(self, film_title, release_date, description, rating, poster, director_id, user_id):
+        self.film_title = film_title
+        self.release_date = release_date
+        self.description = description
+        self.rating = rating
+        self.poster = poster
+        self.director_id = director_id
+        self.user_id = user_id
+
 
 class FilmHasGenre(db.Model):
     __tablename__ = "film_has_genre"
@@ -58,6 +67,10 @@ class FilmHasGenre(db.Model):
     film_has_genre = db.Column(db.Integer, primary_key=True)
     film_id = db.Column(db.Integer, db.ForeignKey('film.film_id'), nullable=False)
     genre_id = db.Column(db.Integer, db.ForeignKey('genre.genre_id'), nullable=False)
+
+    def __init__(self, film_id, genre_id):
+        self.film_id = film_id
+        self.genre_id = genre_id
 
 
 class Genre(db.Model):
