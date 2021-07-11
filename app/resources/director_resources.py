@@ -19,8 +19,8 @@ class DirectorListResource(Resource):
 
     def post(self):
         new_director = Director(
-            first_name=request.json['first_name'],
-            last_name=request.json['last_name']
+            first_name=request.json["first_name"],
+            last_name=request.json["last_name"]
         )
         db.session.add(new_director)
         db.session.commit()
