@@ -65,4 +65,9 @@ class Genre(db.Model):
 
     genre_id = db.Column(db.Integer, primary_key=True)
     genre_title = db.Column(db.String(20), unique=True, nullable=False)
-    film_has_genres = db.relationship('FilmHasGenre', backref='genre', lazy=True)
+    # film_has_genres = db.relationship('FilmHasGenre', backref='genre', lazy=True)
+
+    def __init__(self, genre_title):
+        self.genre_title = genre_title
+
+
