@@ -1,5 +1,6 @@
 from flask import request, jsonify
 from flask_restful import Resource
+from flask_login import current_user
 
 from app import db
 from app.models import User
@@ -10,8 +11,13 @@ user_schema = UserSchema()
 
 class UserListResource(Resource):
     def get(self):
-        users = User.query.all()
-        return user_schema.dump(users)
+        return jsonify([{
+            'user_id': user.user_id,
+            'username': user.username,
+            'first_name': user.first_name,
+            'last_name': user.last_name,
+            'email': user.email
+        } for user in User.query.all()])
 
     def post(self):
         new_user = User(
@@ -26,10 +32,10 @@ class UserListResource(Resource):
         db.session.commit()
         return user_schema.dump(new_user)
 
-
 class UserResource(Resource):
     def get(self, user_id):
         user = User.query.get_or_404(user_id)
+
         return user_schema.dump(user)
 
     def patch(self, user_id):

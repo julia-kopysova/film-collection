@@ -47,9 +47,9 @@ class Film(db.Model):
     film_title = db.Column(db.String(100), unique=False, nullable=False)
     release_date = db.Column(db.DateTime, nullable=False)
     description = db.Column(db.String(500), unique=False, nullable=False)
-    rating = db.Column(db.Numeric(2, 2), unique=False, nullable=False)
+    rating = db.Column(db.Integer, unique=False, nullable=False)
     poster = db.Column(db.String(100), unique=False, nullable=False)
-    director_id = db.Column(db.Integer, db.ForeignKey('director.director_id'), nullable=True)
+    director_id = db.Column(db.Integer, db.ForeignKey('director.director_id', ondelete='SET NULL'), nullable=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.user_id'), nullable=False)
     genres = relationship("Genre", secondary="film_has_genre")
 
@@ -61,9 +61,6 @@ class Film(db.Model):
         self.poster = poster
         self.director_id = director_id
         self.user_id = user_id
-
-
-
 
 
 class Genre(db.Model):

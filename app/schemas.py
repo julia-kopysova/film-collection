@@ -55,5 +55,5 @@ class FilmSchema(ma.Schema):
         include_fk = True
 
 
-film_schema = UserSchema()
-film_schema = UserSchema(many=True)
+film_schema = FilmSchema()
+film_schema = FilmSchema(many=True)
