@@ -1,8 +1,8 @@
-"""Initial migration.
+"""empty message
 
-Revision ID: 2ba9b3711e85
+Revision ID: 6d4797afb4f9
 Revises: 
-Create Date: 2021-07-09 12:04:40.913270
+Create Date: 2021-07-12 23:25:00.246262
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '2ba9b3711e85'
+revision = '6d4797afb4f9'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -36,7 +36,7 @@ def upgrade():
     sa.Column('first_name', sa.String(length=50), nullable=False),
     sa.Column('last_name', sa.String(length=50), nullable=False),
     sa.Column('email', sa.String(length=50), nullable=False),
-    sa.Column('password', sa.String(length=100), nullable=False),
+    sa.Column('password', sa.String(length=500), nullable=False),
     sa.Column('is_superuser', sa.Boolean(), nullable=False),
     sa.PrimaryKeyConstraint('user_id'),
     sa.UniqueConstraint('email'),
@@ -47,11 +47,11 @@ def upgrade():
     sa.Column('film_title', sa.String(length=100), nullable=False),
     sa.Column('release_date', sa.DateTime(), nullable=False),
     sa.Column('description', sa.String(length=500), nullable=False),
-    sa.Column('rating', sa.Numeric(precision=2, scale=2), nullable=False),
-    sa.Column('poster', sa.String(length=100), nullable=False),
+    sa.Column('rating', sa.Integer(), nullable=False),
+    sa.Column('poster', sa.String(length=256), nullable=False),
     sa.Column('director_id', sa.Integer(), nullable=True),
     sa.Column('user_id', sa.Integer(), nullable=False),
-    sa.ForeignKeyConstraint(['director_id'], ['director.director_id'], ),
+    sa.ForeignKeyConstraint(['director_id'], ['director.director_id'], ondelete='SET NULL'),
     sa.ForeignKeyConstraint(['user_id'], ['user.user_id'], ),
     sa.PrimaryKeyConstraint('film_id')
     )

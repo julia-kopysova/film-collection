@@ -1,10 +1,16 @@
 """
 Models of project
 """
-from app import db
+from flask_login import UserMixin
+from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy.orm import relationship, backref
+
+# from app import db
+
+db = SQLAlchemy()
 
 
-class User(db.Model):
+class User(db.Model, UserMixin):
     __tablename__ = "user"
 
     user_id = db.Column(db.Integer, primary_key=True)
@@ -12,7 +18,7 @@ class User(db.Model):
     first_name = db.Column(db.String(50), unique=False, nullable=False)
     last_name = db.Column(db.String(50), unique=False, nullable=False)
     email = db.Column(db.String(50), unique=True, nullable=False)
-    password = db.Column(db.String(100), nullable=False)
+    password = db.Column(db.String(500), nullable=False)
     is_superuser = db.Column(db.Boolean(), default=True, nullable=False)
     films = db.relationship('Film', backref='user', lazy=True)
 
@@ -23,6 +29,9 @@ class User(db.Model):
         self.email = email
         self.password = password
         self.is_superuser = is_superuser
+
+    def get_id(self):
+        return self.user_id
 
 
 class Director(db.Model):
@@ -45,11 +54,31 @@ class Film(db.Model):
     film_title = db.Column(db.String(100), unique=False, nullable=False)
     release_date = db.Column(db.DateTime, nullable=False)
     description = db.Column(db.String(500), unique=False, nullable=False)
-    rating = db.Column(db.Numeric(2, 2), unique=False, nullable=False)
-    poster = db.Column(db.String(100), unique=False, nullable=False)
-    director_id = db.Column(db.Integer, db.ForeignKey('director.director_id'), nullable=True)
+    rating = db.Column(db.Integer, unique=False, nullable=False)
+    poster = db.Column(db.String(256), unique=False, nullable=False)
+    director_id = db.Column(db.Integer, db.ForeignKey('director.director_id', ondelete='SET NULL'), nullable=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.user_id'), nullable=False)
-    film_has_genres = db.relationship('FilmHasGenre', backref='film', lazy=True)
+    genres = relationship("Genre", secondary="film_has_genre")
+
+    def __init__(self, film_title, release_date, description, rating, poster, director_id, user_id):
+        self.film_title = film_title
+        self.release_date = release_date
+        self.description = description
+        self.rating = rating
+        self.poster = poster
+        self.director_id = director_id
+        self.user_id = user_id
+
+
+class Genre(db.Model):
+    __tablename__ = "genre"
+
+    genre_id = db.Column(db.Integer, primary_key=True)
+    genre_title = db.Column(db.String(20), unique=True, nullable=False)
+    users = relationship("Film", secondary="film_has_genre")
+
+    def __init__(self, genre_title):
+        self.genre_title = genre_title
 
 
 class FilmHasGenre(db.Model):
@@ -59,10 +88,9 @@ class FilmHasGenre(db.Model):
     film_id = db.Column(db.Integer, db.ForeignKey('film.film_id'), nullable=False)
     genre_id = db.Column(db.Integer, db.ForeignKey('genre.genre_id'), nullable=False)
 
+    film = relationship(Film, backref=backref("film_has_genre", cascade="all, delete-orphan"))
+    genre = relationship(Genre, backref=backref("film_has_genre", cascade="all, delete-orphan"))
 
-class Genre(db.Model):
-    __tablename__ = "genre"
-
-    genre_id = db.Column(db.Integer, primary_key=True)
-    genre_title = db.Column(db.String(20), unique=True, nullable=False)
-    film_has_genres = db.relationship('FilmHasGenre', backref='genre', lazy=True)
+    def __init__(self, film_id, genre_id):
+        self.film_id = film_id
+        self.genre_id = genre_id
