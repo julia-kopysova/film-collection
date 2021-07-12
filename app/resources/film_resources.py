@@ -10,8 +10,10 @@ film_schema = FilmSchema()
 
 class FilmListResource(Resource):
     def get(self):
-        films = Film.query.all()
-        return film_schema.dump(films)
+        return jsonify([{
+            'film_id': film.film_id,
+            'film_title': film.film_title
+        } for film in Film.query.all()])
 
     def post(self):
         new_film = Film(

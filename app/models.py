@@ -1,6 +1,8 @@
 """
 Models of project
 """
+import json
+
 from flask_login import UserMixin
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import relationship, backref
@@ -79,6 +81,13 @@ class Genre(db.Model):
 
     def __init__(self, genre_title):
         self.genre_title = genre_title
+
+    def toJSON(self):
+        return json.dumps(self, default=lambda o: o.__dict__,
+                          sort_keys=True, indent=4)
+
+    def as_dict(self):
+        return {c.genre_title: getattr(self, c.genre_title) for c in self.__table__.columns}
 
 
 class FilmHasGenre(db.Model):

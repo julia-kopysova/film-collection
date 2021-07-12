@@ -100,4 +100,4 @@ def logout():
 # def get_genres():
 #     # all_genres = Genre.query.all()
 #     return 'lalala'
-from app import auth
+from app import auth, pagination
