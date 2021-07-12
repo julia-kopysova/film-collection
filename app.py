@@ -61,4 +61,5 @@ api.add_resource(FilmResource, '/films/<int:film_id>')
 
 from app import models
 if __name__ == "__main__":
+    application.debug = True
     application.run(debug=True, host='0.0.0.0', port=5000, use_debugger=False, use_reloader=False)

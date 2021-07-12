@@ -1,12 +1,16 @@
 """
 Models of project
 """
+from flask_login import UserMixin
+from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import relationship, backref
 
-from app import db
+# from app import db
+
+db = SQLAlchemy()
 
 
-class User(db.Model):
+class User(db.Model, UserMixin):
     __tablename__ = "user"
 
     user_id = db.Column(db.Integer, primary_key=True)
@@ -14,7 +18,7 @@ class User(db.Model):
     first_name = db.Column(db.String(50), unique=False, nullable=False)
     last_name = db.Column(db.String(50), unique=False, nullable=False)
     email = db.Column(db.String(50), unique=True, nullable=False)
-    password = db.Column(db.String(100), nullable=False)
+    password = db.Column(db.String(500), nullable=False)
     is_superuser = db.Column(db.Boolean(), default=True, nullable=False)
     films = db.relationship('Film', backref='user', lazy=True)
 
@@ -25,6 +29,9 @@ class User(db.Model):
         self.email = email
         self.password = password
         self.is_superuser = is_superuser
+
+    def get_id(self):
+        return self.user_id
 
 
 class Director(db.Model):
@@ -48,7 +55,7 @@ class Film(db.Model):
     release_date = db.Column(db.DateTime, nullable=False)
     description = db.Column(db.String(500), unique=False, nullable=False)
     rating = db.Column(db.Integer, unique=False, nullable=False)
-    poster = db.Column(db.String(100), unique=False, nullable=False)
+    poster = db.Column(db.String(256), unique=False, nullable=False)
     director_id = db.Column(db.Integer, db.ForeignKey('director.director_id', ondelete='SET NULL'), nullable=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.user_id'), nullable=False)
     genres = relationship("Genre", secondary="film_has_genre")

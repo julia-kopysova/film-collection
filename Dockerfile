@@ -20,6 +20,7 @@ RUN poetry install --no-dev
 COPY app.py .
 COPY /app /app
 COPY entrypoint.sh .
+COPY .env .
 
 
 #ENTRYPOINT [ "bash", "entrypoint.sh" ]

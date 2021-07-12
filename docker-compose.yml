@@ -11,21 +11,20 @@ services:
         ports:
             - 5000:5000
         env_file:
-            - ./.env.list
+            - .env
         depends_on:
             - db
     db:
         image: postgres:13.2
-        container_name: db_film_collection
+        container_name: db_${NAME_DB}
         hostname: db_film_collection
         restart: always
         env_file:
-            - ./.env.list
+            - .env
         environment:
             POSTGRES_USER: ${POSTGRES_USER}
             POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
             POSTGRES_DB: ${POSTGRES_DB}
-            PGDATE: ${PGDATE}
         volumes:
             - db-data:/var/lib/postgresql/data
         ports:
