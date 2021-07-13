@@ -1,8 +1,11 @@
 """
 Models of project
 """
+import json
+
 from flask_login import UserMixin
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import inspect
 from sqlalchemy.orm import relationship, backref
 
 # from app import db
@@ -29,6 +32,11 @@ class User(db.Model, UserMixin):
         self.email = email
         self.password = password
         self.is_superuser = is_superuser
+
+    def __repr__(self):
+        return '<User: first_name = {first_name}, last_name = {last_name}>'.format(
+            first_name=self.first_name,
+            last_name=self.last_name)
 
     def get_id(self):
         return self.user_id
@@ -79,6 +87,20 @@ class Genre(db.Model):
 
     def __init__(self, genre_title):
         self.genre_title = genre_title
+
+    def toJSON(self):
+        return json.dumps(self, default=lambda o: o.__dict__,
+                          sort_keys=True, indent=4)
+
+    def as_dict(self):
+        return {c.genre_title: getattr(self, c.genre_title) for c in self.__table__.columns}
+
+    def to_dict(self):
+        return {c.key: getattr(self, c.key) for c in inspect(self).mapper.column_attrs}
+
+    @classmethod
+    def find_all(cls):
+        return cls.query.all()
 
 
 class FilmHasGenre(db.Model):
