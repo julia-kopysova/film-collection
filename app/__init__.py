@@ -86,11 +86,6 @@ def login():
 #     return 'added', 202
 #     # return redirect(url_for('auth.login'))
 
-
-@application.route('/logout')
-def logout():
-    return 'Logout'
-
 # @app.route('/foo')
 # def foo():
 #     return 'foo000'
@@ -100,4 +95,4 @@ def logout():
 # def get_genres():
 #     # all_genres = Genre.query.all()
 #     return 'lalala'
-from app import auth, pagination
+from app import auth, pagination, search
