@@ -33,6 +33,11 @@ class User(db.Model, UserMixin):
         self.password = password
         self.is_superuser = is_superuser
 
+    def __repr__(self):
+        return '<User: first_name = {first_name}, last_name = {last_name}>'.format(
+            first_name=self.first_name,
+            last_name=self.last_name)
+
     def get_id(self):
         return self.user_id
 

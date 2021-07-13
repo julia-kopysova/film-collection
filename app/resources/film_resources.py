@@ -1,8 +1,11 @@
+import json
+
 from flask import request, jsonify
 from flask_restful import Resource
+from sqlalchemy import desc
 
 from app import db
-from app.models import Film
+from app.models import Film, User
 from app.schemas import FilmSchema
 
 film_schema = FilmSchema()
@@ -10,10 +13,15 @@ film_schema = FilmSchema()
 
 class FilmListResource(Resource):
     def get(self):
+        order_field = request.args.get('order_field', 'film_id')
+        films = Film.query.order_by(desc(order_field)).all()
         return jsonify([{
             'film_id': film.film_id,
-            'film_title': film.film_title
-        } for film in Film.query.all()])
+            'film_title': film.film_title,
+            'rating': film.rating,
+            'release_date': film.release_date,
+            # 'user_added': User.query.filter_by(user_id=film.user_id).first()
+        } for film in films])
 
     def post(self):
         new_film = Film(
