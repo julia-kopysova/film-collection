@@ -1,3 +1,5 @@
+import json
+
 from flask import request, jsonify
 from flask_restful import Resource
 
@@ -8,12 +10,26 @@ from app.schemas import GenreSchema
 genre_schema = GenreSchema()
 
 
+class GenreEncoder(json.JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, Genre):
+            return obj.__dict__
+        return json.JSONEncoder.default(self, obj)
+
+
 class GenreListResource(Resource):
-    def get(self):
-        return jsonify([{
+    @staticmethod
+    def get():
+        # genres = Genre.query.all()
+        # return json.dumps(genres, cls=GenreEncoder)
+        return [{
             'genre_id': genre.genre_id,
             'genre_title': genre.genre_title
-        } for genre in Genre.query.all()])
+        } for genre in Genre.query.all()]
+        # genres_list = []
+        # for genre in genres:
+        #     genres_list.append(genre.to_dict())
+        # return json.dumps(genres)
 
     def post(self):
         new_genre = Genre(

@@ -5,6 +5,7 @@ import json
 
 from flask_login import UserMixin
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import inspect
 from sqlalchemy.orm import relationship, backref
 
 # from app import db
@@ -88,6 +89,13 @@ class Genre(db.Model):
 
     def as_dict(self):
         return {c.genre_title: getattr(self, c.genre_title) for c in self.__table__.columns}
+
+    def to_dict(self):
+        return {c.key: getattr(self, c.key) for c in inspect(self).mapper.column_attrs}
+
+    @classmethod
+    def find_all(cls):
+        return cls.query.all()
 
 
 class FilmHasGenre(db.Model):
