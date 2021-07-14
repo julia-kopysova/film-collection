@@ -1,7 +1,8 @@
 from flask import jsonify, request
+from sqlalchemy import extract
 
 from app import application
-from app.models import Film
+from app.models import Film, Director, Genre
 from app.pagination import get_paginated_list
 from app.resources.genre_resources import GenreListResource
 
@@ -30,9 +31,9 @@ def search_film_by_name():
     search = "%{}%".format(part_name)
     films = Film.query.filter(Film.film_title.like(search)).all()
     film_list = [{
-            'film_id': film.film_id,
-            'film_title': film.film_title
-        } for film in films]
+        'film_id': film.film_id,
+        'film_title': film.film_title
+    } for film in films]
 
     return jsonify(get_paginated_list(
         film_list,
@@ -41,3 +42,26 @@ def search_film_by_name():
         limit=request.args.get('limit', 10),
         name=part_name
     ))
+
+
+@application.route('/films_filter', methods=['GET'])
+def filter_films():
+    """
+    Filters films by parameters
+    :return: jsonify
+    """
+    # year_start = request.args.get('year_start', None)
+    # year_end = request.args.get('year_end', None)
+    # first_name = request.args.get('first_name', None)
+    # last_name = request.args.get('last_name', None)
+    genre_title = request.args.get('genre_title', None)
+    # films = Film.query.filter(extract('year', Film.release_date).between(year_start, year_end))
+    # films = Film.query.join(Director, Film.director_id == Director.director_id).filter(
+    #     Director.first_name == first_name, Director.last_name == last_name)
+    films = Film.query.join(Film.genres).filter(Genre.genre_title == genre_title)
+    return jsonify([{
+        'film_id': film.film_id,
+        'film_title': film.film_title,
+        'release_date': film.release_date
+
+    } for film in films])

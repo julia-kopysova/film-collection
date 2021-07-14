@@ -1,7 +1,7 @@
 from typing import Union, Tuple
 
 from flask import request, redirect, url_for, Response, jsonify
-from flask_login import login_user, logout_user
+from flask_login import login_user, logout_user, login_required
 from werkzeug.security import generate_password_hash, check_password_hash
 
 from app import application, User, db, login_manager
@@ -46,6 +46,7 @@ def login_post():
     user = User.query.filter_by(username=username).first()
     if user and check_password_hash(user.password, password):
         login_user(user)
+        db.session.commit()
         return jsonify({"status": 202,
                        "reason": "Log in"})
     else:
@@ -54,6 +55,7 @@ def login_post():
 
 
 @application.route('/logout', methods=['POST'])
+@login_required
 def logout_post():
     logout_user()
     return jsonify({'result': 200, 'data': {'message': 'logout success'}})
