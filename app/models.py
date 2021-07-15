@@ -1,10 +1,11 @@
 """
 Models of project
 """
+import json
+
 from flask_login import UserMixin
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import relationship, backref
-
 
 db = SQLAlchemy()
 
@@ -59,6 +60,15 @@ class User(db.Model, UserMixin):
         """
         return self.user_id
 
+    def to_JSON(self):
+        """
+        For JSON representation
+        :return: dict of first_name, last_name and username of user
+        """
+        return {"first_name": self.first_name,
+                "last_name": self.last_name,
+                "username": self.username}
+
 
 class Director(db.Model):
     """
@@ -79,6 +89,21 @@ class Director(db.Model):
         """
         self.first_name = first_name
         self.last_name = last_name
+
+    def __str__(self):
+        """
+        String representation
+        :return: string
+        """
+        return f"{self.first_name}  {self.last_name}"
+
+    def to_JSON(self):
+        """
+        For JSON representation
+        :return: dict of first_name and last_name of director
+        """
+        return {"first_name": self.first_name,
+                "last_name": self.last_name}
 
 
 class Film(db.Model):
@@ -135,6 +160,13 @@ class Genre(db.Model):
         :param genre_title: title of genre
         """
         self.genre_title = genre_title
+
+    def to_JSON(self):
+        """
+        For JSON representation
+        :return: dict of genres title
+        """
+        return {"genre_title": self.genre_title}
 
 
 class FilmHasGenre(db.Model):

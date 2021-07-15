@@ -6,8 +6,8 @@ from flask_login import login_required, current_user
 from flask_restful import Resource
 from sqlalchemy import desc
 
-from app import db
-from app.models import Film, Director, Genre, FilmHasGenre
+from app import db, application
+from app.models import Film, Director, Genre, FilmHasGenre, User
 from app.pagination import get_paginated_list
 from app.schemas import FilmSchema
 
@@ -23,17 +23,32 @@ class FilmListResource(Resource):
     def get():
         """
         Display all films
+        Director, user is searched using join
+        Genres added in list through relationship backref
         """
         order_field = request.args.get('order_field', 'film_id')
-        films = Film.query.order_by(desc(order_field)).all()
-        film_list = [{
-            'film_id': film.film_id,
-            'film_title': film.film_title,
-            'rating': film.rating,
-            'release_date': film.release_date,
-            'director': film.director_id,
-            'user_id': film.user_id
-        } for film in films]
+        films = Film.query.join(Director, Film.director_id == Director.director_id, isouter=True). \
+            join(User, Film.user_id == User.user_id).order_by(desc(order_field)).all()
+        film_list = []
+        for film in films:
+            director = Director.query.filter_by(director_id=film.director_id).first()
+            if director is None:
+                director = 'unknown'
+            else:
+                director = director.to_JSON()
+            film_genre = []
+            if film.genres:
+                for genre in film.genres:
+                    film_genre.append(genre.genre_title)
+            film_list.append({
+                'film_id': film.film_id,
+                'film_title': film.film_title,
+                'rating': film.rating,
+                'release_date': film.release_date,
+                'director': director,
+                'user': User.query.filter_by(user_id=film.user_id).first().to_JSON(),
+                'film_genres': film_genre
+            })
         return jsonify(get_paginated_list(
             film_list,
             '/films',
@@ -167,6 +182,6 @@ class FilmResource(Resource):
                 "reason": "You aren't admin or user who added this film"
             })
         return jsonify({
-                "status": 401,
-                "reason": "Film doesn't exist"
-            })
+            "status": 401,
+            "reason": "Film doesn't exist"
+        })
