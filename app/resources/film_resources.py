@@ -27,8 +27,7 @@ class FilmListResource(Resource):
         Genres added in list through relationship backref
         """
         order_field = request.args.get('order_field', 'film_id')
-        films = Film.query.join(Director, Film.director_id == Director.director_id, isouter=True). \
-            join(User, Film.user_id == User.user_id).order_by(desc(order_field)).all()
+        films = Film.query.order_by(desc(order_field)).all()
         film_list = []
         for film in films:
             director = Director.query.filter_by(director_id=film.director_id).first()
