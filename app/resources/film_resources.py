@@ -152,10 +152,10 @@ class FilmResource(Resource):
         :return:
         """
         film = Film.query.get_or_404(film_id)
-        if current_user.is_authenticated and (
-                current_user.user_id == film.user_id or
-                current_user.is_superuser is True):
-            if film:
+        if film:
+            if current_user.is_authenticated and (
+                    current_user.user_id == film.user_id or
+                    current_user.is_superuser is True):
                 db.session.delete(film)
                 db.session.commit()
                 return jsonify({
@@ -164,9 +164,9 @@ class FilmResource(Resource):
                 })
             return jsonify({
                 "status": 401,
-                "reason": "Film doesn't exist"
+                "reason": "You aren't admin or user who added this film"
             })
         return jsonify({
-            "status": 401,
-            "reason": "You aren't admin or user who added this film"
-        })
+                "status": 401,
+                "reason": "Film doesn't exist"
+            })
