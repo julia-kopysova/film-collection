@@ -1,3 +1,6 @@
+"""
+Module for pagination
+"""
 from flask import abort
 
 
