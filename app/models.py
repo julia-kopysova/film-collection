@@ -1,19 +1,20 @@
 """
 Models of project
 """
-import json
-
 from flask_login import UserMixin
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import inspect
 from sqlalchemy.orm import relationship, backref
 
-# from app import db
 
 db = SQLAlchemy()
 
 
 class User(db.Model, UserMixin):
+    """
+    Class represents User model
+    Method:
+        get_id: returns id of user
+    """
     __tablename__ = "user"
 
     user_id = db.Column(db.Integer, primary_key=True)
@@ -26,6 +27,15 @@ class User(db.Model, UserMixin):
     films = db.relationship('Film', backref='user', lazy=True)
 
     def __init__(self, username, first_name, last_name, email, password, is_superuser):
+        """
+        Initializes User
+        :param username: username unique
+        :param first_name: first name of user
+        :param last_name: last name of user
+        :param email: email of user
+        :param password: password in hash representation
+        :param is_superuser: is admin or not
+        """
         self.username = username
         self.first_name = first_name
         self.last_name = last_name
@@ -34,15 +44,26 @@ class User(db.Model, UserMixin):
         self.is_superuser = is_superuser
 
     def __repr__(self):
+        """
+        String representation
+        :return: string
+        """
         return '<User: first_name = {first_name}, last_name = {last_name}>'.format(
             first_name=self.first_name,
             last_name=self.last_name)
 
-    def get_id(self):
+    def get_id(self) -> int:
+        """
+        Returns if of user
+        :return: int
+        """
         return self.user_id
 
 
 class Director(db.Model):
+    """
+    Class represents Director model
+    """
     __tablename__ = "director"
 
     director_id = db.Column(db.Integer, primary_key=True)
@@ -51,11 +72,19 @@ class Director(db.Model):
     films = db.relationship('Film', backref='director', lazy=True)
 
     def __init__(self, first_name, last_name):
+        """
+        Initializes Director
+        :param first_name: first name of director
+        :param last_name: last name of director
+        """
         self.first_name = first_name
         self.last_name = last_name
 
 
 class Film(db.Model):
+    """
+    Class represents Film model
+    """
     __tablename__ = "film"
 
     film_id = db.Column(db.Integer, primary_key=True)
@@ -64,11 +93,23 @@ class Film(db.Model):
     description = db.Column(db.String(500), unique=False, nullable=False)
     rating = db.Column(db.Integer, unique=False, nullable=False)
     poster = db.Column(db.String(256), unique=False, nullable=False)
-    director_id = db.Column(db.Integer, db.ForeignKey('director.director_id', ondelete='SET NULL'), nullable=True)
+    director_id = db.Column(db.Integer,
+                            db.ForeignKey('director.director_id', ondelete='SET NULL'),
+                            nullable=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.user_id'), nullable=False)
     genres = relationship("Genre", secondary="film_has_genre")
 
     def __init__(self, film_title, release_date, description, rating, poster, director_id, user_id):
+        """
+        Initializes Film
+        :param film_title: film title
+        :param release_date: date when film was released
+        :param description: description of
+        :param rating: rating of film
+        :param poster: link on poster
+        :param director_id: fk on director
+        :param user_id: fk on user that added film
+        """
         self.film_title = film_title
         self.release_date = release_date
         self.description = description
@@ -79,6 +120,9 @@ class Film(db.Model):
 
 
 class Genre(db.Model):
+    """
+    Class represents Genre model
+    """
     __tablename__ = "genre"
 
     genre_id = db.Column(db.Integer, primary_key=True)
@@ -86,24 +130,17 @@ class Genre(db.Model):
     users = relationship("Film", secondary="film_has_genre")
 
     def __init__(self, genre_title):
+        """
+        Initializes genre
+        :param genre_title: title of genre
+        """
         self.genre_title = genre_title
-
-    def toJSON(self):
-        return json.dumps(self, default=lambda o: o.__dict__,
-                          sort_keys=True, indent=4)
-
-    def as_dict(self):
-        return {c.genre_title: getattr(self, c.genre_title) for c in self.__table__.columns}
-
-    def to_dict(self):
-        return {c.key: getattr(self, c.key) for c in inspect(self).mapper.column_attrs}
-
-    @classmethod
-    def find_all(cls):
-        return cls.query.all()
 
 
 class FilmHasGenre(db.Model):
+    """
+    Model for associative table between Genre and Film
+    """
     __tablename__ = "film_has_genre"
 
     film_has_genre = db.Column(db.Integer, primary_key=True)
@@ -114,5 +151,10 @@ class FilmHasGenre(db.Model):
     genre = relationship(Genre, backref=backref("film_has_genre", cascade="all, delete-orphan"))
 
     def __init__(self, film_id, genre_id):
+        """
+        Initializes film and genre
+        :param film_id: fk on film
+        :param genre_id: fk on genre
+        """
         self.film_id = film_id
         self.genre_id = genre_id

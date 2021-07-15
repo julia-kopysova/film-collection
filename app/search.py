@@ -1,14 +1,16 @@
-from flask import jsonify, request
-from sqlalchemy import extract
+"""
+Module for search films by title and filter films
+"""
+from flask import jsonify, request, Response
 
 from app import application
-from app.models import Film, Director, Genre
+from app.models import Film, Genre
 from app.pagination import get_paginated_list
 from app.resources.genre_resources import GenreListResource
 
 
 @application.route('/genres_list', methods=['GET'])
-def genres_list_pagination():
+def genres_list_pagination() -> Response:
     """
     Paginated genres
     :return: jsonify
@@ -22,7 +24,7 @@ def genres_list_pagination():
 
 
 @application.route('/search_film', methods=['GET'])
-def search_film_by_name():
+def search_film_by_name() -> Response:
     """
     Search film by partial coincidence
     :return: paginated jsonify
@@ -45,7 +47,7 @@ def search_film_by_name():
 
 
 @application.route('/films_filter', methods=['GET'])
-def filter_films():
+def filter_films() -> Response:
     """
     Filters films by parameters
     :return: jsonify

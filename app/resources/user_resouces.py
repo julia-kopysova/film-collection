@@ -1,6 +1,8 @@
+"""
+Module for user resources
+"""
 from flask import request, jsonify
 from flask_restful import Resource
-from flask_login import current_user
 
 from app import db
 from app.models import User
@@ -10,7 +12,15 @@ user_schema = UserSchema()
 
 
 class UserListResource(Resource):
-    def get(self):
+    """
+    Resource for users
+    """
+    @staticmethod
+    def get():
+        """
+        Get users
+        :return: Response
+        """
         return jsonify([{
             'user_id': user.user_id,
             'username': user.username,
@@ -20,7 +30,12 @@ class UserListResource(Resource):
             'password': user.password
         } for user in User.query.all()])
 
-    def post(self):
+    @staticmethod
+    def post():
+        """
+        Adds user
+        :return: JSON
+        """
         new_user = User(
             username=request.json['username'],
             first_name=request.json['first_name'],
@@ -35,12 +50,27 @@ class UserListResource(Resource):
 
 
 class UserResource(Resource):
-    def get(self, user_id):
+    """
+    Resources for one user
+    """
+    @staticmethod
+    def get(user_id):
+        """
+        Get one user
+        :param user_id: id of user
+        :return: JSON
+        """
         user = User.query.get_or_404(user_id)
 
         return user_schema.dump(user)
 
-    def patch(self, user_id):
+    @staticmethod
+    def patch(user_id):
+        """
+        Update user
+        :param user_id: id of user
+        :return: JSON
+        """
         user = User.query.get_or_404(user_id)
 
         if 'username' in request.json:
@@ -58,8 +88,17 @@ class UserResource(Resource):
         db.session.commit()
         return user_schema.dump(user)
 
-    def delete(self, user_id):
+    @staticmethod
+    def delete(user_id):
+        """
+        Delete user by user_id
+        :param user_id: id of user
+        :return: Response
+        """
         user = User.query.get_or_404(user_id)
         db.session.delete(user)
         db.session.commit()
-        return '', 204
+        return jsonify({
+            "status": 204,
+            "reason": "User was deleted"
+        })
