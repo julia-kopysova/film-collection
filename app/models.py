@@ -1,11 +1,11 @@
 """
 Models of project
 """
-import json
+import re
 
 from flask_login import UserMixin
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy.orm import relationship, backref
+from sqlalchemy.orm import relationship, backref, validates
 
 db = SQLAlchemy()
 
@@ -26,6 +26,34 @@ class User(db.Model, UserMixin):
     password = db.Column(db.String(500), nullable=False)
     is_superuser = db.Column(db.Boolean(), default=True, nullable=False)
     films = db.relationship('Film', backref='user', lazy=True)
+
+    @validates('email')
+    def validate_email(self, key, email):
+        """
+        Validation for email
+        :param key:
+        :param email: email
+        :return: email
+        """
+        if not email:
+            raise AssertionError('No email provided')
+        if not re.match("[^@]+@[^@]+\.[^@]+", email):
+            raise AssertionError('Provided email is not an email address')
+        return email
+
+    @validates('username')
+    def validate_username(self, key, username):
+        """
+        Validation for username
+        :param key:
+        :param username: username
+        :return: username
+        """
+        if not username:
+            raise AssertionError('No username provided')
+        if len(username) < 4:
+            raise AssertionError('Username less then 4')
+        return username
 
     def __init__(self, username, first_name, last_name, email, password, is_superuser):
         """
@@ -123,6 +151,21 @@ class Film(db.Model):
                             nullable=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.user_id'), nullable=False)
     genres = relationship("Genre", secondary="film_has_genre")
+
+    @validates('rating')
+    def validate_rating(self, key, rating):
+        """
+        Validation for rating
+        Rating must be between 0 and 10
+        :param key:
+        :param rating: rating
+        :return: rating
+        """
+        if not rating:
+            raise AssertionError('No rating provided')
+        if rating < 0 or rating > 10:
+            raise AssertionError('Rating not in between 0 and 10')
+        return rating
 
     def __init__(self, film_title, release_date, description, rating, poster, director_id, user_id):
         """

@@ -37,13 +37,17 @@ def signup() -> Response:
     if user:
         return jsonify({"status": 405,
                         "reason": "This data already exists"})
-    new_user = User(
-        username=username,
-        first_name=first_name,
-        last_name=last_name,
-        email=email,
-        password=generate_password_hash(password),
-        is_superuser=False)
+    try:
+        new_user = User(
+            username=username,
+            first_name=first_name,
+            last_name=last_name,
+            email=email,
+            password=generate_password_hash(password),
+            is_superuser=False)
+    except AssertionError:
+        return jsonify({"status": 401,
+                        "reason": "Incorrect data"})
     db.session.add(new_user)
     db.session.commit()
     return jsonify({"status": 200,

@@ -85,15 +85,20 @@ class FilmListResource(Resource):
                                           last_name=director_last_name)
                 db.session.add(director_in_db)
                 db.session.commit()
-            new_film = Film(
-                film_title=film_title,
-                release_date=release_date,
-                description=description,
-                rating=rating,
-                poster=poster,
-                director_id=director_in_db.director_id,
-                user_id=current_user.get_id()
-            )
+            try:
+                new_film = Film(
+                    film_title=film_title,
+                    release_date=release_date,
+                    description=description,
+                    rating=rating,
+                    poster=poster,
+                    director_id=director_in_db.director_id,
+                    user_id=current_user.get_id()
+                )
+            except AssertionError:
+                return jsonify({"status": 401,
+                                "reason": "Incorrect data"})
+
             db.session.add(new_film)
             db.session.commit()
             for genre in genres:
