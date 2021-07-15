@@ -111,6 +111,7 @@ class FilmResource(Resource):
         return film_schema.dump(film)
 
     @staticmethod
+    @login_required
     def patch(film_id):
         """
         Update film
