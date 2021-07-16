@@ -19,7 +19,7 @@ class User(db.Model, UserMixin):
     __tablename__ = "user"
 
     user_id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(50), unique=True, nullable=False)
+    username = db.Column(db.String(50), unique=True, nullable=False, index=True)
     first_name = db.Column(db.String(50), unique=False, nullable=False)
     last_name = db.Column(db.String(50), unique=False, nullable=False)
     email = db.Column(db.String(50), unique=True, nullable=False)
@@ -142,9 +142,9 @@ class Film(db.Model):
 
     film_id = db.Column(db.Integer, primary_key=True)
     film_title = db.Column(db.String(100), unique=False, nullable=False)
-    release_date = db.Column(db.DateTime, nullable=False)
+    release_date = db.Column(db.DateTime, nullable=False, index=True)
     description = db.Column(db.String(500), unique=False, nullable=False)
-    rating = db.Column(db.Integer, unique=False, nullable=False)
+    rating = db.Column(db.Integer, unique=False, nullable=False, index=True)
     poster = db.Column(db.String(256), unique=False, nullable=False)
     director_id = db.Column(db.Integer,
                             db.ForeignKey('director.director_id', ondelete='SET NULL'),

@@ -6,7 +6,7 @@ from flask_login import current_user, login_required
 from flask_restful import Resource
 from werkzeug.security import generate_password_hash
 
-from app import db
+from app import db, application
 from app.models import User
 from app.schemas import UserSchema
 
@@ -47,8 +47,9 @@ class UserListResource(Resource):
         """
         if current_user.is_authenticated and current_user.is_superuser:
             password = request.json['password']
+            username = request.json['username']
             new_user = User(
-                username=request.json['username'],
+                username=username,
                 first_name=request.json['first_name'],
                 last_name=request.json['last_name'],
                 email=request.json['email'],
@@ -57,6 +58,7 @@ class UserListResource(Resource):
             )
             db.session.add(new_user)
             db.session.commit()
+            application.logger.info('%s added user %s', current_user.username, username)
             return user_schema.dump(new_user)
         return jsonify({
             "status": 401,

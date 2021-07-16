@@ -5,7 +5,7 @@ from flask import request, jsonify
 from flask_login import current_user, login_required
 from flask_restful import Resource
 
-from app import db
+from app import db, application
 from app.models import Director
 from app.schemas import DirectorSchema
 
@@ -98,6 +98,7 @@ class DirectorResource(Resource):
             director = Director.query.get_or_404(director_id)
             db.session.delete(director)
             db.session.commit()
+            application.logger.info('%s deletes director %s', current_user.username, director_id)
             return jsonify({
                 "status": 204,
                 "reason": "Director was deleted"

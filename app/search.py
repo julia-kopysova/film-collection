@@ -35,10 +35,12 @@ def search_film_by_name() -> Response:
     search = "%{}%".format(part_name)
     films = Film.query.filter(Film.film_title.like(search)).all()
     film_list = [{
-        'film_id': film.film_id,
-        'film_title': film.film_title
+         'film_id': film.film_id,
+         'film_title': film.film_title,
+         'rating': film.rating,
+         'release_date': film.release_date
     } for film in films]
-
+    application.logger.info('Searching by %s', part_name)
     return jsonify(get_paginated_list(
         film_list,
         '/search_film',

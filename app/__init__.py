@@ -52,6 +52,7 @@ def hello_world():
     Hello Word method
     :return:
     """
+    application.logger.info('Processing default request')
     return 'Hello World!!!!'
 
 

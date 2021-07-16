@@ -27,6 +27,7 @@ class FilmListResource(Resource):
         Genres added in list through relationship backref
         """
         order_field = request.args.get('order_field', 'film_id')
+        application.logger.info('Order by %s', order_field)
         films = Film.query.order_by(desc(order_field)).all()
         film_list = []
         for film in films:
@@ -95,7 +96,9 @@ class FilmListResource(Resource):
                     director_id=director_in_db.director_id,
                     user_id=current_user.get_id()
                 )
+                application.logger.info('%s added film %s', current_user.username, film_title)
             except AssertionError:
+                application.logger.info('%s entered incorrect data', current_user.username)
                 return jsonify({"status": 401,
                                 "reason": "Incorrect data"})
 
