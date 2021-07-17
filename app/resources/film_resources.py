@@ -171,7 +171,7 @@ class FilmResource(Resource):
         """
         Delete film by film_id
         :param film_id: id of film
-        :return:
+        :return: Response
         """
         film = Film.query.get_or_404(film_id)
         if film:

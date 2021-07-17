@@ -45,7 +45,7 @@
             "description": "User params to register new user",
             "in": "body",
             "schema" : {
-                  "$ref" : "#definitions/User"
+
                 }
           }
         ],
@@ -75,7 +75,7 @@
               "description": "User enter username and password",
               "in": "body",
               "schema" : {
-                    "$ref" : "#definitions/User"
+
                   }
             }
           ],
@@ -114,7 +114,7 @@
                     "description": "Director params for director",
                     "in": "body",
                     "schema" : {
-                          "$ref" : "#definitions/Director"
+
                         }
                   }
                 ],
@@ -137,7 +137,7 @@
                   ],
           "responses": {
             "200": {
-              "description": "Llogout success"
+              "description": "Logout success"
             },
             "401": {
                         "description": "Not authorized"
@@ -179,7 +179,7 @@
                     "description": "Director params for director",
                     "in": "body",
                     "schema" : {
-                          "$ref" : "#definitions/Director"
+
                         }
                   }
                 ],
@@ -238,7 +238,7 @@
                     "description": "Genre params for creating",
                     "in": "body",
                     "schema" : {
-                          "$ref" : "#definitions/Genre"
+
                         }
                   }
                 ],
@@ -289,7 +289,7 @@
                     "description": "Genre params for updating",
                     "in": "body",
                     "schema" : {
-                          "$ref" : "#definitions/Genre"
+
                         }
                   }
                 ],
@@ -351,7 +351,7 @@
                     "description": "User params for creating",
                     "in": "body",
                     "schema" : {
-                          "$ref" : "#definitions/User"
+
                         }
                   }
                 ],
@@ -402,7 +402,7 @@
                     "description": "User params for updating",
                     "in": "body",
                     "schema" : {
-                          "$ref" : "#definitions/User"
+
                         }
                   }
                 ],
@@ -438,6 +438,271 @@
                     "Users"
                 ]
             }
+        },
+    "/films": {
+            "get": {
+               "parameters": [
+                  {
+                    "name": "ordering",
+                    "description": "By what film the ordering will be execute",
+                    "in": "query",
+                    "schema" : {
+
+                        }
+                  }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    }
+                },
+                "summary": "Get films",
+                "description": ":return: JSON",
+                "tags": [
+                    "Films"
+                ]
+            },
+            "post": {
+                "summary": "API Endpoint for create film by user",
+                "description": "Create new film",
+                "tags": [
+                            "Films"
+                        ],
+                "parameters": [
+                  {
+                    "name": "film",
+                    "description": "Film  params for adding",
+                    "in": "body",
+                    "schema" : {
+
+                        }
+                  }
+                ],
+                "responses": {
+                  "200": {
+                    "description": "New film has added"
+                  },
+                  "401": {
+                    "description": "User isn't authenticated, Incorrect data"
+                  }
+                }
+            }
+        },
+    "/films/{film_id}": {
+            "parameters": [
+                {
+                    "name": "film_id",
+                    "in": "path",
+                    "required": true,
+                    "type": "integer"
+                }
+            ],
+            "delete": {
+                "responses": {
+                    "200": {
+                        "description": "Film was deleted"
+                    },
+                    "401": {
+                        "description": "You aren't admin or user who added this film\nFilm doesn't exist"
+                    }
+                },
+                "summary": "Delete film",
+                "description": ":param film_id: id of film\n:return: Response",
+                "tags": [
+                    "Films"
+                ]
+            },
+            "patch": {
+              "parameters": [
+                  {
+                    "name": "film",
+                    "description": "Film params for updating",
+                    "in": "body",
+                    "schema" : {
+
+                        }
+                  }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    },
+                    "401": {
+                        "description": "You aren't admin or user who added this film"
+                    }
+                },
+                "summary": "Updates a film",
+                "description": ":param film_id: id of film\n:return: JSON",
+                "tags": [
+                    "Films"
+                ]
+            },
+            "get": {
+                "responses": {
+                  "200": {
+                        "description": "Success"
+                    }
+                },
+                "summary": "Get one film",
+                "description": ":param film_id: id of film\n:return: JSON",
+                "tags": [
+                    "Films"
+                ]
+            }
+        },
+      "/genres_list": {
+        "get": {
+          "parameters": [
+                  {
+                    "name": "start",
+                    "description": "from what items start validation",
+                    "in": "query",
+                    "schema" : {
+
+                        }
+                  },
+                  {
+                    "name": "limit",
+                    "description": "how many items in page",
+                    "in": "query",
+                    "schema" : {
+
+                        }
+                  }
+          ],
+          "responses": {
+            "200": {
+              "description": "Success"
+            }
+          },
+          "summary": "Get genres",
+          "description": ":return: JSON",
+          "tags": [
+            "Genres"
+          ]
         }
+      },
+      "/search_film": {
+        "get": {
+          "parameters": [
+                  {
+                    "name": "name",
+                    "description": "search by part title",
+                    "in": "query",
+                    "schema" : {
+
+                        }
+                  }
+          ],
+          "responses": {
+            "200": {
+              "description": "Success"
+            }
+          },
+          "summary": "Search film by partial coincidence",
+          "description": ":return: JSON",
+          "tags": [
+            "Films"
+          ]
+        }
+      },
+    "/films_years_filter": {
+        "get": {
+          "parameters": [
+                  {
+                    "name": "year_start",
+                    "description": "lower limit of value lower",
+                    "in": "query",
+                    "schema" : {
+
+                        }
+                  },
+                  {
+                    "name": "year_end",
+                    "description": "upper limit of value",
+                    "in": "query",
+                    "schema" : {
+
+                        }
+                  }
+
+          ],
+          "responses": {
+            "200": {
+              "description": "Success"
+            }
+          },
+          "summary": "Filters films between years",
+          "description": ":return: JSON",
+          "tags": [
+            "Films"
+          ]
+        }
+      },
+  "/films_director_filter": {
+        "get": {
+          "parameters": [
+                  {
+                    "name": "first_name",
+                    "description": "first name of director",
+                    "in": "query",
+                    "schema" : {
+
+                        }
+                  },
+                  {
+                    "name": "last_name",
+                    "description": "last name of director",
+                    "in": "query",
+                    "schema" : {
+
+                        }
+                  }
+
+          ],
+          "responses": {
+            "200": {
+              "description": "Success, No suitable films exist"
+            },
+            "401": {
+              "description": "Enter first name and last name"
+            }
+          },
+          "summary": "Filters films by director",
+          "description": ":return: JSON",
+          "tags": [
+            "Films"
+          ]
+        }
+      },
+  "/films_genre_filter": {
+        "get": {
+          "parameters": [
+                  {
+                    "name": "genre_title",
+                    "description": "first name of director",
+                    "in": "query",
+                    "schema" : {
+
+                        }
+                  }
+
+          ],
+          "responses": {
+            "200": {
+              "description": "Success"
+            },
+            "401": {
+              "description": "Enter genre title"
+            }
+          },
+          "summary": "Filters films by genre",
+          "description": ":return: JSON",
+          "tags": [
+            "Films"
+          ]
+        }
+      }
+
   }
 }

@@ -34,7 +34,7 @@ def search_film_by_name() -> Response:
     """
     part_name = request.args.get('name')
     search = "%{}%".format(part_name)
-    films = Film.query.filter(Film.film_title.like(search)).all()
+    films = Film.query.filter(Film.film_title.ilike(search)).all()
     film_list = [{
         'film_id': film.film_id,
         'film_title': film.film_title,
@@ -61,17 +61,13 @@ def filter_films_by_years() -> Response:
     year_start = request.args.get('year_start', default=1900, type=int)
     year_end = request.args.get('year_end', default=todays_date.year, type=int)
     films = Film.query.filter(extract('year', Film.release_date).between(year_start, year_end))
-    if len(films) != 0:
-        return jsonify([{
+    return jsonify([{
             'film_id': film.film_id,
             'film_title': film.film_title,
             'release_date': film.release_date,
             'rating': film.rating,
             'poster': film.poster
-
         } for film in films])
-    return jsonify({"status": 200,
-                    "reason": "No suitable films exist"})
 
 
 @application.route('/films_director_filter', methods=['GET'])
@@ -85,16 +81,13 @@ def filter_films_by_director() -> Response:
     if first_name and last_name:
         films = Film.query.join(Director, Film.director_id == Director.director_id). \
                     filter(Director.first_name == first_name, Director.last_name == last_name)
-        if len(films) != 0:
-            return jsonify([{
+        return jsonify([{
                 'film_id': film.film_id,
                 'film_title': film.film_title,
                 'release_date': film.release_date,
                 'rating': film.rating,
                 'poster': film.poster
             } for film in films])
-        return jsonify({"status": 200,
-                        "reason": "No suitable films exist"})
     return jsonify({"status": 401,
                     "reason": "Enter first name and last name"})
 
@@ -108,8 +101,7 @@ def filter_films_by_genre() -> Response:
     genre_title = request.args.get('genre_title', None, type=str)
     if genre_title:
         films = Film.query.join(Film.genres).filter(Genre.genre_title == genre_title)
-        if len(films) != 0:
-            return jsonify([{
+        return jsonify([{
                 'film_id': film.film_id,
                 'film_title': film.film_title,
                 'release_date': film.release_date,
@@ -117,8 +109,6 @@ def filter_films_by_genre() -> Response:
                 'poster': film.poster
 
             } for film in films])
-        return jsonify({"status": 200,
-                        "reason": "No suitable films exist"})
     return jsonify({
             "status": 401,
             "reason": "Enter genre title"
