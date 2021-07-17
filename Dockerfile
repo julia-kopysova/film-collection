@@ -22,5 +22,4 @@ COPY /app /app
 COPY entrypoint.sh .
 COPY .env .
 
-
 #ENTRYPOINT [ "bash", "entrypoint.sh" ]

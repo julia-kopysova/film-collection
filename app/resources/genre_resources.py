@@ -5,7 +5,7 @@ from flask import request, jsonify
 from flask_login import current_user, login_required
 from flask_restful import Resource
 
-from app import db
+from app import db, application
 from app.models import Genre
 from app.schemas import GenreSchema
 
@@ -22,6 +22,7 @@ class GenreListResource(Resource):
         Get genres
         :return: list of JSONs
         """
+        application.logger.info("Get all films")
         return [{
             'genre_id': genre.genre_id,
             'genre_title': genre.genre_title
@@ -40,6 +41,7 @@ class GenreListResource(Resource):
             )
             db.session.add(new_genre)
             db.session.commit()
+            application.logger.info("%s added genre", current_user.username)
             return genre_schema.dump(new_genre)
         return jsonify({
                 "status": 401,
@@ -59,6 +61,7 @@ class GenreResource(Resource):
         :return: JSON
         """
         genre = Genre.query.get_or_404(genre_id)
+        application.logger.info("Ged %d genre", genre_id)
         return genre_schema.dump(genre)
 
     @staticmethod
@@ -73,7 +76,7 @@ class GenreResource(Resource):
             genre = Genre.query.get_or_404(genre_id)
             if 'genre_title' in request.json:
                 genre.genre_title = request.json['genre_title']
-
+                application.logger.info("Update title %d genre", genre_id)
             db.session.commit()
             return genre_schema.dump(genre)
         return jsonify({
@@ -93,6 +96,7 @@ class GenreResource(Resource):
             genre = Genre.query.get_or_404(genre_id)
             db.session.delete(genre)
             db.session.commit()
+            application.logger.info("Deleted %d genre", genre_id)
             return jsonify({
                 "status": 204,
                 "reason": "Genre was deleted"

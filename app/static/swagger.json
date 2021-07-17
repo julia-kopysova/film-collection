@@ -1,0 +1,708 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "1.0",
+    "title": "Film-collection API",
+    "contact": {
+      "name": "Yuliia Kopysova",
+      "email": "julykopysova97@b.com"
+    }
+  },
+  "host": "172.20.0.3:5000",
+  "basePath": "/",
+  "tags": [
+        {
+          "name": "Users",
+          "description": "API for User"
+        },
+        {
+          "name": "Directors",
+          "description": "API for Directors"
+        },
+        {
+          "name": "Genres",
+          "description": "API for Genre"
+        },
+        {
+          "name": "Films",
+          "description": "API for Film"
+        }
+  ],
+  "schemes": [
+    "http"
+  ],
+  "paths": {
+    "/signup": {
+      "post": {
+        "summary": "API Endpoint for create User",
+        "description": "Create new User in database",
+        "tags": [
+                    "Users"
+                ],
+        "parameters": [
+          {
+            "name": "user",
+            "description": "User params to register new user",
+            "in": "body",
+            "schema" : {
+
+                }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "New user has Created"
+          },
+          "405": {
+            "description": "This data already exists"
+          },
+          "401": {
+            "description": "Incorrect data"
+          }
+        }
+      }
+    },
+    "/login": {
+        "post": {
+          "summary": "API Endpoint for log in  User",
+          "description": "For log in user in system",
+          "tags": [
+                      "Users"
+                  ],
+          "parameters": [
+            {
+              "name": "user",
+              "description": "User enter username and password",
+              "in": "body",
+              "schema" : {
+
+                  }
+            }
+          ],
+          "responses": {
+            "202": {
+              "description": "Log In"
+            },
+            "401": {
+              "description": "Username or Password Error"
+            }
+          }
+        }
+    },
+     "/directors": {
+            "get": {
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    }
+                },
+                "summary": "Get directors",
+                "description": ":return: Response",
+                "tags": [
+                    "Directors"
+                ]
+            },
+            "post": {
+                "summary": "API Endpoint for create Director by admin",
+                "description": "Create new Director by admin",
+                "tags": [
+                            "Directors"
+                        ],
+                "parameters": [
+                  {
+                    "name": "director",
+                    "description": "Director params for director",
+                    "in": "body",
+                    "schema" : {
+
+                        }
+                  }
+                ],
+                "responses": {
+                  "200": {
+                    "description": "New director has created"
+                  },
+                  "401": {
+                    "description": "User is not admin"
+                  }
+                }
+            }
+        },
+    "/logout": {
+        "post": {
+          "summary": "API Endpoint for log out  User",
+          "description": "For log out user in system",
+          "tags": [
+                      "Users"
+                  ],
+          "responses": {
+            "200": {
+              "description": "Logout success"
+            },
+            "401": {
+                        "description": "Not authorized"
+            }
+          }
+        }
+    },
+    "/directors/{director_id}": {
+            "parameters": [
+                {
+                    "name": "director_id",
+                    "in": "path",
+                    "required": true,
+                    "type": "integer"
+                }
+            ],
+            "delete": {
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    },
+                    "404": {
+                        "description": "Not found"
+                    },
+                    "401": {
+                        "description": "User is not admin"
+                    }
+                },
+                "summary": "Delete director",
+                "description": ":param director_id: id of director\n:return: Response",
+                "tags": [
+                    "Directors"
+                ]
+            },
+            "patch": {
+              "parameters": [
+                  {
+                    "name": "director",
+                    "description": "Director params for director",
+                    "in": "body",
+                    "schema" : {
+
+                        }
+                  }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    },
+                    "404": {
+                        "description": "Not found"
+                    },
+                    "401": {
+                        "description": "Not authorized"
+                    }
+                },
+                "summary": "Updates a director",
+                "description": ":param director_id: id of director\n:return: JSON",
+                "tags": [
+                    "Directors"
+                ]
+            },
+            "get": {
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    }
+                },
+                "summary": "Get one director",
+                "description": ":param director_id: id of director\n:return: JSON",
+                "tags": [
+                    "Directors"
+                ]
+            }
+        },
+         "/genres": {
+            "get": {
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    }
+                },
+                "summary": "Get genres",
+                "description": ":return: JSON",
+                "tags": [
+                    "Genres"
+                ]
+            },
+            "post": {
+                "summary": "API Endpoint for create Genre by admin",
+                "description": "Create new Genre by admin",
+                "tags": [
+                            "Genres"
+                        ],
+                "parameters": [
+                  {
+                    "name": "genre",
+                    "description": "Genre params for creating",
+                    "in": "body",
+                    "schema" : {
+
+                        }
+                  }
+                ],
+                "responses": {
+                  "200": {
+                    "description": "New genre has created"
+                  },
+                  "401": {
+                    "description": "User is not admin"
+                  }
+                }
+            }
+        },
+    "/genres/{genre_id}": {
+            "parameters": [
+                {
+                    "name": "genre_id",
+                    "in": "path",
+                    "required": true,
+                    "type": "integer"
+                }
+            ],
+            "delete": {
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    },
+                    "204": {
+                        "description": "Genre was deleted"
+                    },
+                    "404": {
+                        "description": "Not found"
+                    },
+                    "401": {
+                        "description": "User is not admin"
+                    }
+                },
+                "summary": "Delete genre",
+                "description": ":param genre_id: id of genre\n:return: Response",
+                "tags": [
+                    "Genres"
+                ]
+            },
+            "patch": {
+              "parameters": [
+                  {
+                    "name": "genre",
+                    "description": "Genre params for updating",
+                    "in": "body",
+                    "schema" : {
+
+                        }
+                  }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    },
+                    "404": {
+                        "description": "Not found"
+                    },
+                    "401": {
+                        "description": "Not authorized"
+                    }
+                },
+                "summary": "Updates a genre",
+                "description": ":param genre_id: id of genre\n:return: JSON",
+                "tags": [
+                    "Genres"
+                ]
+            },
+            "get": {
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    }
+                },
+                "summary": "Get one genre",
+                "description": ":param genre_id: id of genre\n:return: JSON",
+                "tags": [
+                    "Genres"
+                ]
+            }
+        },
+      "/users": {
+            "get": {
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    },
+                  "402":{
+                      "description": "You aren't admin"
+                  }
+                },
+                "summary": "Get users",
+                "description": ":return: Response",
+                "tags": [
+                    "Users"
+                ]
+            },
+            "post": {
+                "summary": "API Endpoint for create user by admin",
+                "description": "Create new user by admin",
+                "tags": [
+                            "Users"
+                        ],
+                "parameters": [
+                  {
+                    "name": "user",
+                    "description": "User params for creating",
+                    "in": "body",
+                    "schema" : {
+
+                        }
+                  }
+                ],
+                "responses": {
+                  "200": {
+                    "description": "New user has created"
+                  },
+                  "401": {
+                    "description": "You aren't admin"
+                  }
+                }
+            }
+        },
+    "/users/{user_id}": {
+            "parameters": [
+                {
+                    "name": "user_id",
+                    "in": "path",
+                    "required": true,
+                    "type": "integer"
+                }
+            ],
+            "delete": {
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    },
+                    "204": {
+                        "description": "User was deleted"
+                    },
+                    "404": {
+                        "description": "Not found"
+                    },
+                    "401": {
+                        "description": "You aren't admin"
+                    }
+                },
+                "summary": "Delete user",
+                "description": ":param user_id: id of user\n:return: Response",
+                "tags": [
+                    "Users"
+                ]
+            },
+            "patch": {
+              "parameters": [
+                  {
+                    "name": "user",
+                    "description": "User params for updating",
+                    "in": "body",
+                    "schema" : {
+
+                        }
+                  }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    },
+                    "404": {
+                        "description": "Not found"
+                    },
+                    "401": {
+                        "description": "You aren't admin or this user"
+                    }
+                },
+                "summary": "Updates a user",
+                "description": ":param user_id: id of user\n:return: JSON",
+                "tags": [
+                    "Users"
+                ]
+            },
+            "get": {
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    },
+                  "401": {
+                        "description": "You aren't admin or this user"
+                    }
+                },
+                "summary": "Get one user",
+                "description": ":param user_id: id of user\n:return: JSON",
+                "tags": [
+                    "Users"
+                ]
+            }
+        },
+    "/films": {
+            "get": {
+               "parameters": [
+                  {
+                    "name": "ordering",
+                    "description": "By what film the ordering will be execute",
+                    "in": "query",
+                    "schema" : {
+
+                        }
+                  }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    }
+                },
+                "summary": "Get films",
+                "description": ":return: JSON",
+                "tags": [
+                    "Films"
+                ]
+            },
+            "post": {
+                "summary": "API Endpoint for create film by user",
+                "description": "Create new film",
+                "tags": [
+                            "Films"
+                        ],
+                "parameters": [
+                  {
+                    "name": "film",
+                    "description": "Film  params for adding",
+                    "in": "body",
+                    "schema" : {
+
+                        }
+                  }
+                ],
+                "responses": {
+                  "200": {
+                    "description": "New film has added"
+                  },
+                  "401": {
+                    "description": "User isn't authenticated, Incorrect data"
+                  }
+                }
+            }
+        },
+    "/films/{film_id}": {
+            "parameters": [
+                {
+                    "name": "film_id",
+                    "in": "path",
+                    "required": true,
+                    "type": "integer"
+                }
+            ],
+            "delete": {
+                "responses": {
+                    "200": {
+                        "description": "Film was deleted"
+                    },
+                    "401": {
+                        "description": "You aren't admin or user who added this film\nFilm doesn't exist"
+                    }
+                },
+                "summary": "Delete film",
+                "description": ":param film_id: id of film\n:return: Response",
+                "tags": [
+                    "Films"
+                ]
+            },
+            "patch": {
+              "parameters": [
+                  {
+                    "name": "film",
+                    "description": "Film params for updating",
+                    "in": "body",
+                    "schema" : {
+
+                        }
+                  }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    },
+                    "401": {
+                        "description": "You aren't admin or user who added this film"
+                    }
+                },
+                "summary": "Updates a film",
+                "description": ":param film_id: id of film\n:return: JSON",
+                "tags": [
+                    "Films"
+                ]
+            },
+            "get": {
+                "responses": {
+                  "200": {
+                        "description": "Success"
+                    }
+                },
+                "summary": "Get one film",
+                "description": ":param film_id: id of film\n:return: JSON",
+                "tags": [
+                    "Films"
+                ]
+            }
+        },
+      "/genres_list": {
+        "get": {
+          "parameters": [
+                  {
+                    "name": "start",
+                    "description": "from what items start validation",
+                    "in": "query",
+                    "schema" : {
+
+                        }
+                  },
+                  {
+                    "name": "limit",
+                    "description": "how many items in page",
+                    "in": "query",
+                    "schema" : {
+
+                        }
+                  }
+          ],
+          "responses": {
+            "200": {
+              "description": "Success"
+            }
+          },
+          "summary": "Get genres",
+          "description": ":return: JSON",
+          "tags": [
+            "Genres"
+          ]
+        }
+      },
+      "/search_film": {
+        "get": {
+          "parameters": [
+                  {
+                    "name": "name",
+                    "description": "search by part title",
+                    "in": "query",
+                    "schema" : {
+
+                        }
+                  }
+          ],
+          "responses": {
+            "200": {
+              "description": "Success"
+            }
+          },
+          "summary": "Search film by partial coincidence",
+          "description": ":return: JSON",
+          "tags": [
+            "Films"
+          ]
+        }
+      },
+    "/films_years_filter": {
+        "get": {
+          "parameters": [
+                  {
+                    "name": "year_start",
+                    "description": "lower limit of value lower",
+                    "in": "query",
+                    "schema" : {
+
+                        }
+                  },
+                  {
+                    "name": "year_end",
+                    "description": "upper limit of value",
+                    "in": "query",
+                    "schema" : {
+
+                        }
+                  }
+
+          ],
+          "responses": {
+            "200": {
+              "description": "Success"
+            }
+          },
+          "summary": "Filters films between years",
+          "description": ":return: JSON",
+          "tags": [
+            "Films"
+          ]
+        }
+      },
+  "/films_director_filter": {
+        "get": {
+          "parameters": [
+                  {
+                    "name": "first_name",
+                    "description": "first name of director",
+                    "in": "query",
+                    "schema" : {
+
+                        }
+                  },
+                  {
+                    "name": "last_name",
+                    "description": "last name of director",
+                    "in": "query",
+                    "schema" : {
+
+                        }
+                  }
+
+          ],
+          "responses": {
+            "200": {
+              "description": "Success, No suitable films exist"
+            },
+            "401": {
+              "description": "Enter first name and last name"
+            }
+          },
+          "summary": "Filters films by director",
+          "description": ":return: JSON",
+          "tags": [
+            "Films"
+          ]
+        }
+      },
+  "/films_genre_filter": {
+        "get": {
+          "parameters": [
+                  {
+                    "name": "genre_title",
+                    "description": "first name of director",
+                    "in": "query",
+                    "schema" : {
+
+                        }
+                  }
+
+          ],
+          "responses": {
+            "200": {
+              "description": "Success"
+            },
+            "401": {
+              "description": "Enter genre title"
+            }
+          },
+          "summary": "Filters films by genre",
+          "description": ":return: JSON",
+          "tags": [
+            "Films"
+          ]
+        }
+      }
+
+  }
+}

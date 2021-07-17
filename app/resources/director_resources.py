@@ -5,7 +5,7 @@ from flask import request, jsonify
 from flask_login import current_user, login_required
 from flask_restful import Resource
 
-from app import db
+from app import db, application
 from app.models import Director
 from app.schemas import DirectorSchema
 
@@ -22,10 +22,11 @@ class DirectorListResource(Resource):
         Get directors
         :return: Response
         """
+        application.logger.info("Get directors")
         return jsonify([{
-            'director_id': director.director_id,
-            'first_name': director.first_name,
-            'last_name': director.last_name,
+            "director_id": director.director_id,
+            "first_name": director.first_name,
+            "last_name": director.last_name,
 
         } for director in Director.query.all()])
 
@@ -34,13 +35,15 @@ class DirectorListResource(Resource):
     def post():
         """
         Adds a director
-        :return:
+        :return: JSON
         """
         if current_user.is_authenticated and current_user.is_superuser:
             new_director = Director(
                 first_name=request.json["first_name"],
                 last_name=request.json["last_name"]
             )
+            application.logger.info("User %s added director %s %s",
+                                    current_user.username, new_director.first_name, new_director.last_name)
             db.session.add(new_director)
             db.session.commit()
             return director_schema.dump(new_director)
@@ -57,11 +60,13 @@ class DirectorResource(Resource):
     @staticmethod
     def get(director_id):
         """
-        Get onr director
+        Get one director
         :param director_id: id of director
         :return: JSON
         """
         director = Director.query.get_or_404(director_id)
+        if director:
+            application.logger.info("Get director %d", director_id)
         return director_schema.dump(director)
 
     @staticmethod
@@ -77,8 +82,10 @@ class DirectorResource(Resource):
 
             if 'first_name' in request.json:
                 director.first_name = request.json['first_name']
+                application.logger.info("Update director %d first_name %s", director_id, director.first_name)
             if 'last_name' in request.json:
                 director.last_name = request.json['last_name']
+                application.logger.info("Update director %d last_name %s", director_id, director.last_name)
             db.session.commit()
             return director_schema.dump(director)
         return jsonify({
@@ -98,6 +105,7 @@ class DirectorResource(Resource):
             director = Director.query.get_or_404(director_id)
             db.session.delete(director)
             db.session.commit()
+            application.logger.info('%s deletes director %s', current_user.username, director_id)
             return jsonify({
                 "status": 204,
                 "reason": "Director was deleted"
