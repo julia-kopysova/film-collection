@@ -34,7 +34,7 @@ class DirectorListResource(Resource):
     def post():
         """
         Adds a director
-        :return:
+        :return: JSON
         """
         if current_user.is_authenticated and current_user.is_superuser:
             new_director = Director(
@@ -57,7 +57,7 @@ class DirectorResource(Resource):
     @staticmethod
     def get(director_id):
         """
-        Get onr director
+        Get one director
         :param director_id: id of director
         :return: JSON
         """
