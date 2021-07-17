@@ -84,8 +84,7 @@ def logout_post() -> Response:
     Logout user
     :return: Response
     """
-    user = current_user
-    application.logger.info('Log out')
     logout_user()
+    application.logger.info('Log out')
     return jsonify({"status": 200,
                     "reason": "logout success"})

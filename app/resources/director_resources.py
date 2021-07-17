@@ -22,10 +22,11 @@ class DirectorListResource(Resource):
         Get directors
         :return: Response
         """
+        application.logger.info("Get directors")
         return jsonify([{
-            'director_id': director.director_id,
-            'first_name': director.first_name,
-            'last_name': director.last_name,
+            "director_id": director.director_id,
+            "first_name": director.first_name,
+            "last_name": director.last_name,
 
         } for director in Director.query.all()])
 
@@ -41,6 +42,8 @@ class DirectorListResource(Resource):
                 first_name=request.json["first_name"],
                 last_name=request.json["last_name"]
             )
+            application.logger.info("User %s added director %s %s",
+                                    current_user.username, new_director.first_name, new_director.last_name)
             db.session.add(new_director)
             db.session.commit()
             return director_schema.dump(new_director)
@@ -62,6 +65,8 @@ class DirectorResource(Resource):
         :return: JSON
         """
         director = Director.query.get_or_404(director_id)
+        if director:
+            application.logger.info("Get director %d", director_id)
         return director_schema.dump(director)
 
     @staticmethod
@@ -77,8 +82,10 @@ class DirectorResource(Resource):
 
             if 'first_name' in request.json:
                 director.first_name = request.json['first_name']
+                application.logger.info("Update director %d first_name %s", director_id, director.first_name)
             if 'last_name' in request.json:
                 director.last_name = request.json['last_name']
+                application.logger.info("Update director %d last_name %s", director_id, director.last_name)
             db.session.commit()
             return director_schema.dump(director)
         return jsonify({

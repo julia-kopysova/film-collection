@@ -25,6 +25,7 @@ class UserListResource(Resource):
         :return: Response
         """
         if current_user.is_authenticated and current_user.is_superuser:
+            application.logger.info("Get users")
             return jsonify([{
                 'user_id': user.user_id,
                 'username': user.username,
@@ -82,6 +83,7 @@ class UserResource(Resource):
                 current_user.user_id == user_id or
                 current_user.is_superuser is True):
             user = User.query.get_or_404(user_id)
+            application.logger.info("Get user %d", user_id)
             return user_schema.dump(user)
         return jsonify({
             "status": 401,
@@ -100,19 +102,30 @@ class UserResource(Resource):
                 current_user.user_id == user_id or
                 current_user.is_superuser is True):
             user = User.query.get_or_404(user_id)
-
             if 'username' in request.json:
                 user.username = request.json['username']
+                application.logger.info("Update username %d user %s",
+                                        user.user_id, current_user.username)
             if 'first_name' in request.json:
                 user.username = request.json['first_name']
+                application.logger.info("Update first_name %d user %s",
+                                        user.user_id, current_user.username)
             if 'last_name' in request.json:
                 user.username = request.json['last_name']
+                application.logger.info("Update last_name %d user %s",
+                                        user.user_id, current_user.username)
             if 'email' in request.json:
                 user.username = request.json['email']
+                application.logger.info("Update email %d user %s",
+                                        user.user_id, current_user.username)
             if 'password' in request.json:
                 user.username = request.json['password']
+                application.logger.info("Update password %d user %s",
+                                        user.user_id, current_user.username)
             if 'is_superuser' in request.json:
                 user.username = request.json['is_superuser']
+                application.logger.info("Update status superuser %d user %s",
+                                        user.user_id, current_user.username)
             db.session.commit()
             return user_schema.dump(user)
         return jsonify({
@@ -132,6 +145,8 @@ class UserResource(Resource):
             user = User.query.get_or_404(user_id)
             db.session.delete(user)
             db.session.commit()
+            application.logger.info("Deleted user %d user by %s",
+                                    user.user_id, current_user.username)
             return jsonify({
                 "status": 204,
                 "reason": "User was deleted"

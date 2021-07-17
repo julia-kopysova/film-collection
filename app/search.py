@@ -61,6 +61,8 @@ def filter_films_by_years() -> Response:
     year_start = request.args.get('year_start', default=1900, type=int)
     year_end = request.args.get('year_end', default=todays_date.year, type=int)
     films = Film.query.filter(extract('year', Film.release_date).between(year_start, year_end))
+    application.logger.info("Filter by years: %d and %d",
+                            year_start, year_end)
     return jsonify([{
             'film_id': film.film_id,
             'film_title': film.film_title,
@@ -81,6 +83,8 @@ def filter_films_by_director() -> Response:
     if first_name and last_name:
         films = Film.query.join(Director, Film.director_id == Director.director_id). \
                     filter(Director.first_name == first_name, Director.last_name == last_name)
+        application.logger.info("Filter by director: %s and %s",
+                                first_name, last_name)
         return jsonify([{
                 'film_id': film.film_id,
                 'film_title': film.film_title,
@@ -101,6 +105,8 @@ def filter_films_by_genre() -> Response:
     genre_title = request.args.get('genre_title', None, type=str)
     if genre_title:
         films = Film.query.join(Film.genres).filter(Genre.genre_title == genre_title)
+        application.logger.info("Filter by genre: %s",
+                                genre_title)
         return jsonify([{
                 'film_id': film.film_id,
                 'film_title': film.film_title,
