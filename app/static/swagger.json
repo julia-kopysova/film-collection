@@ -1,0 +1,39 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "1.0",
+    "title": "Film-collection API",
+    "contact": {
+      "name": "Yuliia Kopysova",
+      "email": "julykopysova97@b.com"
+    }
+  },
+  "host": "172.20.0.3:5000",
+  "basePath": "/",
+  "schemes": [
+    "http"
+  ],
+  "paths": {
+    "/signup": {
+      "post": {
+        "summary": "API Endpoint for create User",
+        "description": "Create new User in database",
+        "parameters": [
+          {
+            "name": "user",
+            "description": "User params to regitser new user",
+            "in": "body",
+            "schema" : {
+                  "$ref" : "#definitions/User"
+                }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "New user has Created"
+          }
+        }
+      }
+    }
+  }
+}

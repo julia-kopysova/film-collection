@@ -12,6 +12,7 @@ from app.resources.user_resouces import UserListResource, UserResource
 from app import api, application
 
 # cli = FlaskGroup(app)
+from app.swagger import swaggerui_blueprint
 
 api.add_resource(GenreListResource, '/genres')
 api.add_resource(GenreResource, '/genres/<int:genre_id>')
@@ -30,4 +31,5 @@ if __name__ == "__main__":
     application.debug = True
     logging.basicConfig(level=logging.INFO,
                         format='%(asctime)s %(levelname)s %(name)s %(threadName)s : %(message)s')
+    application.register_blueprint(swaggerui_blueprint)
     application.run(debug=True, host='0.0.0.0', port=5000, use_debugger=False, use_reloader=False)

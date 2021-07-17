@@ -46,19 +46,19 @@ api = Api(application)
 #
 
 
-@application.route('/')
-def hello_world():
-    """
-    Hello Word method
-    :return:
-    """
-    application.logger.info('Processing default request')
-    return 'Hello World!!!!'
+# @application.route('/')
+# def hello_world():
+#     """
+#     Hello Word method
+#     :return:
+#     """
+#     application.logger.info('Processing default request')
+#     return 'Hello World!!!!'
 
 
-@application.route('/login')
-def login():
-    return 'Login'
+# @application.route('/login')
+# def login():
+#     return 'Login'
 
 
 # @application.route('/signup', methods=['POST'])
@@ -97,3 +97,7 @@ def login():
 #     # all_genres = Genre.query.all()
 #     return 'lalala'
 from app import auth, pagination, search
+from app.resources.director_resources import DirectorListResource, DirectorResource
+from app.resources.film_resources import FilmListResource, FilmResource
+from app.resources.genre_resources import GenreListResource, GenreResource
+from app.resources.user_resouces import UserListResource, UserResource

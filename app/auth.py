@@ -45,7 +45,7 @@ def signup() -> Response:
             email=email,
             password=generate_password_hash(password),
             is_superuser=False)
-        application.logger.info('%s added to database', user.username)
+        application.logger.info('%s added to database', new_user.username)
     except AssertionError:
         application.logger.info('%s entered incorrect data', user.username)
         return jsonify({"status": 401,
