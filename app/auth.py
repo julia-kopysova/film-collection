@@ -72,7 +72,7 @@ def login_post() -> Response:
         application.logger.info('%s logged in successfully', user.username)
         return jsonify({"status": 202,
                         "reason": "Log in"})
-    application.logger.info('%s failed to log in', user.username)
+    application.logger.info('%s failed to log in', username)
     return jsonify({"status": 401,
                     "reason": "Username or Password Error"})
 
@@ -85,7 +85,7 @@ def logout_post() -> Response:
     :return: Response
     """
     user = current_user
+    application.logger.info('Log out')
     logout_user()
-    application.logger.info('%s log out', user.username)
     return jsonify({"status": 200,
                     "reason": "logout success"})
