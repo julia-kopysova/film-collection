@@ -1,6 +1,19 @@
 import pytest
 
+from app import application, create_app
 from app.models import Director, User, Genre, FilmHasGenre, Film
+
+
+@pytest.fixture
+def application():
+    application = create_app()
+    return application
+
+
+@pytest.fixture
+def client():
+    with application.test_client() as client:
+        yield client
 
 
 @pytest.fixture(scope="module")
