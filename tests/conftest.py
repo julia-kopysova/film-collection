@@ -1,17 +1,18 @@
 import pytest
 
-from app import application, create_app
+from app import create_app
 from app.models import Director, User, Genre, FilmHasGenre, Film
 
 
 @pytest.fixture
 def application():
     application = create_app()
-    return application
+    with application.app_context():
+        yield application
 
 
 @pytest.fixture
-def client():
+def client(application):
     with application.test_client() as client:
         yield client
 
