@@ -107,24 +107,20 @@ class UserResource(Resource):
                 application.logger.info("Update username %d user %s",
                                         user.user_id, current_user.username)
             if 'first_name' in request.json:
-                user.username = request.json['first_name']
+                user.first_name = request.json['first_name']
                 application.logger.info("Update first_name %d user %s",
                                         user.user_id, current_user.username)
             if 'last_name' in request.json:
-                user.username = request.json['last_name']
+                user.last_name = request.json['last_name']
                 application.logger.info("Update last_name %d user %s",
                                         user.user_id, current_user.username)
             if 'email' in request.json:
-                user.username = request.json['email']
+                user.email = request.json['email']
                 application.logger.info("Update email %d user %s",
                                         user.user_id, current_user.username)
             if 'password' in request.json:
-                user.username = request.json['password']
+                user.password = request.json['password']
                 application.logger.info("Update password %d user %s",
-                                        user.user_id, current_user.username)
-            if 'is_superuser' in request.json:
-                user.username = request.json['is_superuser']
-                application.logger.info("Update status superuser %d user %s",
                                         user.user_id, current_user.username)
             db.session.commit()
             return user_schema.dump(user)
