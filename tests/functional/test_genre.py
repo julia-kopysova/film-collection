@@ -38,7 +38,7 @@ def test_delete_genres():
 
 def test_patch_genres():
     """
-    Test delete genres
+    Test patch genres
     """
     res = requests.patch('http://0.0.0.0:5000/genres/1', json={"genre_title": "Horror"})
     assert res.status_code == 401

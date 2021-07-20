@@ -116,6 +116,6 @@ def filter_films_by_genre() -> Response:
 
             } for film in films])
     return jsonify({
-            "status": 401,
+            "status": 404,
             "reason": "Enter genre title"
         })
