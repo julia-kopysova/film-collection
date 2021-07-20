@@ -88,7 +88,7 @@ class User(db.Model, UserMixin):
         """
         return self.user_id
 
-    def to_JSON(self):
+    def to_json(self):
         """
         For JSON representation
         :return: dict of first_name, last_name and username of user
@@ -125,7 +125,7 @@ class Director(db.Model):
         """
         return f"{self.first_name}  {self.last_name}"
 
-    def to_JSON(self):
+    def to_json(self):
         """
         For JSON representation
         :return: dict of first_name and last_name of director
@@ -204,7 +204,7 @@ class Genre(db.Model):
         """
         self.genre_title = genre_title
 
-    def to_JSON(self):
+    def to_json(self):
         """
         For JSON representation
         :return: dict of genres title

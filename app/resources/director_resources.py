@@ -16,6 +16,7 @@ class DirectorListResource(Resource):
     """
     Resources for directors
     """
+
     @staticmethod
     def get():
         """
@@ -43,7 +44,9 @@ class DirectorListResource(Resource):
                 last_name=request.json["last_name"]
             )
             application.logger.info("User %s added director %s %s",
-                                    current_user.username, new_director.first_name, new_director.last_name)
+                                    current_user.username,
+                                    new_director.first_name,
+                                    new_director.last_name)
             db.session.add(new_director)
             db.session.commit()
             return director_schema.dump(new_director)
@@ -57,6 +60,7 @@ class DirectorResource(Resource):
     """
     Resource for one director
     """
+
     @staticmethod
     def get(director_id):
         """
@@ -77,15 +81,18 @@ class DirectorResource(Resource):
         :param director_id: id of director
         :return: JSON
         """
-        if current_user.is_authenticated and current_user.is_superuser:
+        if current_user.is_authenticated and \
+                current_user.is_superuser:
             director = Director.query.get_or_404(director_id)
 
             if 'first_name' in request.json:
                 director.first_name = request.json['first_name']
-                application.logger.info("Update director %d first_name %s", director_id, director.first_name)
+                application.logger.info("Update director %d first_name %s",
+                                        director_id, director.first_name)
             if 'last_name' in request.json:
                 director.last_name = request.json['last_name']
-                application.logger.info("Update director %d last_name %s", director_id, director.last_name)
+                application.logger.info("Update director %d last_name %s",
+                                        director_id, director.last_name)
             db.session.commit()
             return director_schema.dump(director)
         return jsonify({
@@ -112,6 +119,6 @@ class DirectorResource(Resource):
             })
 
         return jsonify({
-                "status": 401,
-                "reason": "User is not admin"
-            })
+            "status": 401,
+            "reason": "User is not admin"
+        })

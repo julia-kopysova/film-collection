@@ -1,26 +1,28 @@
 """
 Module initializes app
 """
-from typing import Union, Tuple
-
-from flask import Flask, request, jsonify, redirect, url_for, Response
+from flask import Flask
 from flask_login import LoginManager
 from flask_marshmallow import Marshmallow
 from flask_restful import Api
-# from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
-from werkzeug.security import generate_password_hash
 
 
 from app.config import Config
 from app.models import User, db
 from app.swagger import swaggerui_blueprint
 
+
 migrate = Migrate()
 login_manager = LoginManager()
 
 
 def create_app(config_class=Config):
+    """
+    Function for creating application
+    :param config_class: class with config for application
+    :return: application
+    """
     app = Flask(__name__)
     app.secret_key = '1234'
     app.config.from_object(config_class)
