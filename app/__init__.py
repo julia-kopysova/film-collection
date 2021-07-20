@@ -1,17 +1,17 @@
 """
 Module initializes app
 """
+import logging
+
 from flask import Flask
 from flask_login import LoginManager
 from flask_marshmallow import Marshmallow
 from flask_restful import Api
 from flask_migrate import Migrate
 
-
 from app.config import Config
 from app.models import User, db
 from app.swagger import swaggerui_blueprint
-
 
 migrate = Migrate()
 login_manager = LoginManager()
@@ -30,13 +30,17 @@ def create_app(config_class=Config):
     migrate.init_app(app, db)
     app.register_blueprint(swaggerui_blueprint)
     login_manager.init_app(app)
+
+    # docker exec film-collection_web_1 cat logs.log
+
+    logging.basicConfig(level=logging.INFO, filename="logs.log", filemode="a",
+                        format='%(asctime)s:%(levelname)s:%(message)s')
     return app
 
 
 application = create_app()
 ma = Marshmallow(application)
 api = Api(application)
-
 
 from app import auth, pagination, search, urls, swagger
 from app.resources.director_resources import DirectorListResource, DirectorResource
