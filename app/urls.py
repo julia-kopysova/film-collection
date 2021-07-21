@@ -1,3 +1,6 @@
+"""
+Routes fpr resources
+"""
 from app import api
 from app.resources.director_resources import DirectorListResource, DirectorResource
 from app.resources.film_resources import FilmListResource, FilmResource
@@ -15,5 +18,3 @@ api.add_resource(UserResource, '/users/<int:user_id>')
 
 api.add_resource(FilmListResource, '/films')
 api.add_resource(FilmResource, '/films/<int:film_id>')
-
-

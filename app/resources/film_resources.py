@@ -27,6 +27,8 @@ class FilmListResource(Resource):
         Genres added in list through relationship backref
         """
         order_field = request.args.get("order_field", "film_id")
+        if order_field not in ("rating", "release_date"):
+            order_field = "film_id"
         application.logger.info("Order by %s", order_field)
         films = Film.query.order_by(desc(order_field)).all()
         film_list = []
@@ -35,7 +37,7 @@ class FilmListResource(Resource):
             if director is None:
                 director = "unknown"
             else:
-                director = director.to_JSON()
+                director = director.to_json()
             film_genre = []
             if film.genres:
                 for genre in film.genres:
@@ -46,7 +48,7 @@ class FilmListResource(Resource):
                 "rating": film.rating,
                 "release_date": film.release_date,
                 "director": director,
-                "user": User.query.filter_by(user_id=film.user_id).first().to_JSON(),
+                "user": User.query.filter_by(user_id=film.user_id).first().to_json(),
                 "film_genres": film_genre
             })
         return jsonify(get_paginated_list(
@@ -130,20 +132,25 @@ class FilmResource(Resource):
         :return: JSON
         """
         film = Film.query.get_or_404(film_id)
+        director = Director.query.filter_by(director_id=film.director_id).first()
+        if director is None:
+            director = "unknown"
+        else:
+            director = director.to_json()
         film_genre = []
         if film.genres:
             for genre in film.genres:
                 film_genre.append(genre.genre_title)
         application.logger.info("Get film %d", film_id)
         return jsonify(({
-                "film_id": film.film_id,
-                "film_title": film.film_title,
-                "rating": film.rating,
-                "release_date": film.release_date,
-                "director": Director.query.filter_by(director_id=film.director_id).first().to_JSON(),
-                "user": User.query.filter_by(user_id=film.user_id).first().to_JSON(),
-                "film_genres": film_genre
-            }))
+            "film_id": film.film_id,
+            "film_title": film.film_title,
+            "rating": film.rating,
+            "release_date": film.release_date,
+            "director": director,
+            "user": User.query.filter_by(user_id=film.user_id).first().to_json(),
+            "film_genres": film_genre
+        }))
 
     @staticmethod
     @login_required

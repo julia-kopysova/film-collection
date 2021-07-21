@@ -1,14 +1,9 @@
 """
 Module for managing project
 """
-import logging
-
-
-from app import application, urls
-
+from app import application
 
 if __name__ == "__main__":
     application.debug = True
-    logging.basicConfig(level=logging.INFO,
-                        format='%(asctime)s %(levelname)s %(name)s %(threadName)s : %(message)s')
-    application.run()
+    application.run(host="0.0.0.0")
+    # application.run()
