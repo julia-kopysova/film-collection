@@ -1,12 +1,9 @@
-from flask import Flask
+"""
+Module for managing project
+"""
+from app import application
 
-app = Flask(__name__)
-
-
-@app.route('/')
-def hello_world():
-    return 'Hello World!'
-
-
-if __name__ == '__main__':
-    app.run()
+if __name__ == "__main__":
+    application.debug = True
+    application.run(host="0.0.0.0")
+    # application.run()
